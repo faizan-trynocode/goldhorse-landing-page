@@ -1,26 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
+  --color-gold: rgb(146, 134, 63);
+  --color-gold-dark: rgb(116, 106, 48);
+  --color-gold-light: rgb(218, 252, 146);
+  --color-dark-bg: rgb(14, 14, 16);
+  --color-charcoal: rgb(20, 20, 22);
+  --color-cream: rgb(255, 253, 247);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Custom scrollbar and utilities */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::-webkit-scrollbar-track {
+  background: rgb(20, 20, 22);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(146, 134, 63);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(166, 154, 83);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(14, 14, 16);
+  color: #ffffff;
+  font-family: var(--font-sans);
+}
+
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+.goog-te-gadget-icon,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+html.translated-ltr body,
+html.translated-rtl body {
+  top: 0 !important;
+}
+
+.skiptranslate {
+  opacity: 0 !important;
+}
+
+.goog-te-gadget {
+  font-family: var(--font-sans) !important;
+  color: inherit !important;
+}
+
+.goog-te-combo {
+  background: rgb(20, 20, 22) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  outline: none !important;
+}
+
+/* Animations and masking */
+.hero-gradient-overlay {
+  background: linear-gradient(180deg,
+      rgba(240, 242, 248, 0.0275) 0%,
+      rgba(236, 239, 246, 0.0125) 28%,
+      rgba(236, 239, 246, 0) 55%),
+    radial-gradient(ellipse 55% 40% at 0% 0%,
+      rgba(232, 235, 244, 0.035) 0%,
+      rgba(232, 235, 244, 0) 70%),
+    radial-gradient(ellipse 55% 40% at 100% 0%,
+      rgba(232, 235, 244, 0.035) 0%,
+      rgba(232, 235, 244, 0) 70%);
+}
+
+.hero-mask {
+  mask-image: linear-gradient(180deg,
+      black 0%,
+      rgba(0, 0, 0, 0.92) 17%,
+      rgba(0, 0, 0, 0.45) 34%,
+      transparent 55%),
+    linear-gradient(90deg,
+      black 0%,
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 31%),
+    linear-gradient(270deg,
+      black 0%,
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 31%);
+  -webkit-mask-image: linear-gradient(180deg,
+      black 0%,
+      rgba(0, 0, 0, 0.92) 17%,
+      rgba(0, 0, 0, 0.45) 34%,
+      transparent 55%),
+    linear-gradient(90deg,
+      black 0%,
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 31%),
+    linear-gradient(270deg,
+      black 0%,
+      rgba(0, 0, 0, 0.6) 12%,
+      transparent 31%);
 }
