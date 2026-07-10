@@ -120,3 +120,81 @@ html.translated-rtl body {
       rgba(0, 0, 0, 0.6) 12%,
       transparent 31%);
 }
+
+/* Help center article content (rich text from CMS) */
+.article-content h2,
+.article-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.article-content h2 {
+  font-size: 1.5rem;
+}
+
+.article-content h3 {
+  font-size: 1.25rem;
+}
+
+.article-content p {
+  margin: 0.75rem 0;
+  line-height: 1.75;
+}
+
+.article-content strong {
+  font-weight: 600;
+}
+
+.article-content em {
+  font-style: italic;
+}
+
+.article-content u {
+  text-decoration: underline;
+}
+
+.article-content s {
+  text-decoration: line-through;
+}
+
+.article-content ul,
+.article-content ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.article-content ul {
+  list-style: disc;
+}
+
+.article-content ol {
+  list-style: decimal;
+}
+
+.article-content li {
+  margin: 0.35rem 0;
+}
+
+.article-content blockquote {
+  border-left: 3px solid #d4d4d8;
+  color: #52525b;
+  margin: 1rem 0;
+  padding-left: 1rem;
+}
+
+.article-content a {
+  color: #5592f7;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article-content img,
+.article-content .rich-text-editor__image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}

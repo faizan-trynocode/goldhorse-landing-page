@@ -7,4 +7,5 @@ export {
   findCategoryInTree,
   findSubCategoryInTree,
 } from "./utils";
+export { formatArticleContent, isArticleContentEmpty } from "./rich-text";
 export { useHelpCenterContent, refreshHelpCenterContent } from "./use-help-center-content";

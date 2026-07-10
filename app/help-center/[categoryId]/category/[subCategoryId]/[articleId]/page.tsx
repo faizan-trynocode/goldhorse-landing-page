@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar/Navbar";
 import HelpCenterDetailLayout from "@/components/HelpCenter/HelpCenterDetailLayout";
+import ArticleContent from "@/components/HelpCenter/ArticleContent";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -50,12 +51,7 @@ export default function HelpArticlePage() {
 
       <div className="h-px w-full bg-gray-200 mb-8" />
 
-      <div className="prose max-w-none text-[#333] text-sm md:text-base leading-relaxed font-sans">
-        <p>
-          {article.content ??
-            "This article provides detailed information regarding your query. Please refer to the specific sections above or contact our support team using the phone button below if you require further assistance."}
-        </p>
-      </div>
+      <ArticleContent content={article.content} />
     </HelpCenterDetailLayout>
   );
 }
