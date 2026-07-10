@@ -4,17 +4,23 @@ import Navbar from "@/components/Navbar/Navbar";
 import HelpCenterDetailLayout from "@/components/HelpCenter/HelpCenterDetailLayout";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { findCategory, findSubCategory, findArticle } from "@/lib/help-center-data";
+import {
+  findArticleInTree,
+  findCategoryInTree,
+  findSubCategoryInTree,
+  useHelpCenterContent,
+} from "@/lib/help-center";
 
 export default function HelpArticlePage() {
   const params = useParams();
   const categoryId = typeof params?.categoryId === "string" ? params.categoryId : "";
   const subCategoryId = typeof params?.subCategoryId === "string" ? params.subCategoryId : "";
   const articleId = typeof params?.articleId === "string" ? params.articleId : "";
+  const { categories } = useHelpCenterContent();
 
-  const category = findCategory(categoryId);
-  const subCategory = findSubCategory(categoryId, subCategoryId);
-  const article = findArticle(categoryId, subCategoryId, articleId);
+  const category = findCategoryInTree(categories, categoryId);
+  const subCategory = findSubCategoryInTree(categories, categoryId, subCategoryId);
+  const article = findArticleInTree(categories, categoryId, subCategoryId, articleId);
 
   if (!category || !subCategory || !article) {
     return (

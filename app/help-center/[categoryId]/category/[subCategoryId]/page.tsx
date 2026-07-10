@@ -4,15 +4,20 @@ import Navbar from "@/components/Navbar/Navbar";
 import HelpCenterDetailLayout from "@/components/HelpCenter/HelpCenterDetailLayout";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { findCategory, findSubCategory } from "@/lib/help-center-data";
+import {
+  findCategoryInTree,
+  findSubCategoryInTree,
+  useHelpCenterContent,
+} from "@/lib/help-center";
 
 export default function HelpCategoryPage() {
   const params = useParams();
   const categoryId = typeof params?.categoryId === "string" ? params.categoryId : "";
   const subCategoryId = typeof params?.subCategoryId === "string" ? params.subCategoryId : "";
+  const { categories } = useHelpCenterContent();
 
-  const category = findCategory(categoryId);
-  const subCategory = findSubCategory(categoryId, subCategoryId);
+  const category = findCategoryInTree(categories, categoryId);
+  const subCategory = findSubCategoryInTree(categories, categoryId, subCategoryId);
 
   if (!category || !subCategory) {
     return (

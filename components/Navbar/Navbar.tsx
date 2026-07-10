@@ -4,10 +4,28 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 type GoogleTranslateWindow = Window & {
-    google?: any;
+    google?: {
+        translate?: {
+            TranslateElement?: {
+                new (
+                    options: {
+                        pageLanguage: string;
+                        includedLanguages: string;
+                        layout: unknown;
+                        autoDisplay: boolean;
+                    },
+                    elementId: string
+                ): unknown;
+                InlineLayout: {
+                    SIMPLE: unknown;
+                };
+            };
+        };
+    };
     googleTranslateElementInit?: () => void;
 };
 
@@ -43,7 +61,19 @@ const setGoogleTransCookie = (value: string) => {
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [language, setLanguage] = useState<LanguageLabel>(languageOptions[0].label);
+    const [language, setLanguage] = useState<LanguageLabel>(() => {
+        const cookieValue = getGoogleTransCookieValue();
+        if (!cookieValue) {
+            return languageOptions[0].label;
+        }
+
+        const targetValue = cookieValue.split("/").pop();
+        if (targetValue && targetValue in languageValueToLabel) {
+            return languageValueToLabel[targetValue as keyof typeof languageValueToLabel];
+        }
+
+        return languageOptions[0].label;
+    });
     const [langOpen, setLangOpen] = useState(false);
     const pathname = usePathname();
 
@@ -53,18 +83,6 @@ export default function Navbar() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    useEffect(() => {
-        const cookieValue = getGoogleTransCookieValue();
-        if (!cookieValue) {
-            return;
-        }
-
-        const targetValue = cookieValue.split("/").pop();
-        if (targetValue && targetValue in languageValueToLabel) {
-            setLanguage(languageValueToLabel[targetValue as keyof typeof languageValueToLabel]);
-        }
     }, []);
 
     useEffect(() => {
@@ -78,15 +96,16 @@ export default function Navbar() {
 
             container.innerHTML = "";
 
-            if (!win.google?.translate?.TranslateElement) {
+            const TranslateElement = win.google?.translate?.TranslateElement;
+            if (!TranslateElement) {
                 return;
             }
 
-            new win.google.translate.TranslateElement(
+            new TranslateElement(
                 {
                     pageLanguage: "en",
                     includedLanguages: "en,zh-CN,zh-TW",
-                    layout: win.google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    layout: TranslateElement.InlineLayout.SIMPLE,
                     autoDisplay: false,
                 },
                 "google_translate_element"
@@ -157,10 +176,12 @@ export default function Navbar() {
                 <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <img
+                        <Image
                             src="https://framerusercontent.com/images/btgeqyoMBKJmBnpVPIiWUnI0oNQ.png?width=452&height=148"
                             alt="Goldhorse Capital"
                             className="h-6 md:h-8 w-auto object-contain"
+                            width={452}
+                            height={148}
                         />
                     </Link>
 

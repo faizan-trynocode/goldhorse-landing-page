@@ -1,24 +1,4 @@
-export type HelpArticle = {
-  id: string;
-  title: string;
-  content?: string;
-};
-
-export type HelpSubCategory = {
-  id: string;
-  title: string;
-  articles: HelpArticle[];
-};
-
-export type HelpCategory = {
-  id: string;
-  title: string;
-  children: HelpSubCategory[];
-};
-
-export function slugify(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
+import type { HelpCategory } from "./types";
 
 export const helpCategories: HelpCategory[] = [
   {
@@ -206,31 +186,3 @@ export const helpCategories: HelpCategory[] = [
     ],
   },
 ];
-
-export function findCategory(categoryId: string): HelpCategory | undefined {
-  return helpCategories.find((c) => c.id === categoryId);
-}
-
-export function findSubCategory(categoryId: string, subCategoryId: string): HelpSubCategory | undefined {
-  return findCategory(categoryId)?.children.find((c) => c.id === subCategoryId);
-}
-
-export function findArticle(categoryId: string, subCategoryId: string, articleId: string): HelpArticle | undefined {
-  return findSubCategory(categoryId, subCategoryId)?.articles.find((a) => a.id === articleId);
-}
-
-export function findArticleLocation(articleId: string): {
-  category: HelpCategory;
-  subCategory: HelpSubCategory;
-  article: HelpArticle;
-} | undefined {
-  for (const category of helpCategories) {
-    for (const subCategory of category.children) {
-      const article = subCategory.articles.find((a) => a.id === articleId);
-      if (article) {
-        return { category, subCategory, article };
-      }
-    }
-  }
-  return undefined;
-}

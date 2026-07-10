@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { helpCategories } from "@/lib/help-center-data";
+import { useMemo, useState } from "react";
+import { useHelpCenterContent } from "@/lib/help-center";
 
 type HelpCenterSidebarProps = {
   activeCategoryId: string;
@@ -13,16 +13,15 @@ export default function HelpCenterSidebar({
   activeCategoryId,
   activeSubCategoryId,
 }: HelpCenterSidebarProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(
-    () => new Set([activeCategoryId])
+  const { categories: helpCategories } = useHelpCenterContent();
+  const [manualExpandedIds, setManualExpandedIds] = useState<Set<string>>(() => new Set());
+  const expandedIds = useMemo(
+    () => new Set([...manualExpandedIds, activeCategoryId]),
+    [manualExpandedIds, activeCategoryId]
   );
 
-  useEffect(() => {
-    setExpandedIds((prev) => new Set([...prev, activeCategoryId]));
-  }, [activeCategoryId]);
-
   const toggleCategory = (categoryId: string) => {
-    setExpandedIds((prev) => {
+    setManualExpandedIds((prev) => {
       const next = new Set(prev);
       if (next.has(categoryId)) {
         next.delete(categoryId);

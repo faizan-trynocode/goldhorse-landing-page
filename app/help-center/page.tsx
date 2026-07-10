@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import Navbar from "@/components/Navbar/Navbar";
 import FloatingActions from "@/components/HelpCenter/FloatingActions";
-import { helpCategories } from "@/lib/help-center-data";
+import { useHelpCenterContent } from "@/lib/help-center";
 import { 
   Search, 
   CircleDot, 
@@ -34,18 +34,19 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 export default function HelpCenterPage() {
   const [query, setQuery] = useState("");
+  const { categories: helpCategories } = useHelpCenterContent();
 
   const normalizedQuery = query.trim().toLowerCase();
   const searchWords = normalizedQuery.split(/\s+/).filter(Boolean);
   const isSearching = searchWords.length > 0;
 
-  const textMatchesQuery = (text: string) => {
-    const lowerText = text.toLowerCase();
-    return searchWords.every((word) => lowerText.includes(word));
-  };
-
 
   const visibleCategories = useMemo(() => {
+    const textMatchesQuery = (text: string) => {
+      const lowerText = text.toLowerCase();
+      return searchWords.every((word) => lowerText.includes(word));
+    };
+
     return helpCategories
       .map((category) => {
         const firstSubCategory = category.children[0];
@@ -75,8 +76,7 @@ export default function HelpCenterPage() {
         };
       })
       .filter(({ matchCount }) => !isSearching || matchCount > 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSearching, normalizedQuery]);
+  }, [helpCategories, isSearching, searchWords]);
 
   return (
     <main className="min-h-screen bg-white">
@@ -88,8 +88,8 @@ export default function HelpCenterPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border-[20px] border-white/5 rounded-full blur-sm pointer-events-none" />
         <div className="absolute top-[60%] left-[60%] w-32 h-32 bg-white/5 rotate-45 blur-sm pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto px-6 relative z-10 flex flex-col items-center">
-          <h1 className="text-3xl md:text-4xl text-white font-medium mb-8">How can I help you?</h1>
+      <div className="max-w-4xl mx-auto px-6 relative z-10 flex flex-col items-center">
+        <h1 className="text-3xl md:text-4xl text-white font-medium mb-8">How can I help you?</h1>
           
           <div className="w-full max-w-3xl bg-white flex h-14 rounded overflow-hidden shadow-lg">
             <input 
@@ -118,27 +118,38 @@ export default function HelpCenterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {visibleCategories.map(({ category, firstSubCategory, previewArticles }) => (
               <div key={category.id} className="bg-[#f8f9fa] rounded p-6 shadow-sm border border-gray-100">
-                <Link
-                  href={`/help-center/${category.id}/category/${firstSubCategory.id}`}
-                  className="flex items-center gap-3 mb-4 group"
-                >
-                  {categoryIcons[category.id]}
-                  <h3 className="text-xl font-medium text-black group-hover:text-[#bfa15f] transition-colors">
-                    {category.title}
-                  </h3>
-                </Link>
+                {firstSubCategory ? (
+                  <Link
+                    href={`/help-center/${category.id}/category/${firstSubCategory.id}`}
+                    className="flex items-center gap-3 mb-4 group"
+                  >
+                    {categoryIcons[category.id]}
+                    <h3 className="text-xl font-medium text-black group-hover:text-[#bfa15f] transition-colors">
+                      {category.title}
+                    </h3>
+                  </Link>
+                ) : (
+                  <div className="flex items-center gap-3 mb-4">
+                    {categoryIcons[category.id]}
+                    <h3 className="text-xl font-medium text-black">{category.title}</h3>
+                  </div>
+                )}
                 <div className="h-px w-full bg-gray-200 mb-6" />
                 <ul className="space-y-5">
-                  {previewArticles.map((article) => (
-                    <li key={article.id}>
-                      <Link
-                        href={`/help-center/${category.id}/category/${article.subCategoryId}/${article.id}`}
-                        className="text-gray-500 hover:text-black text-sm transition-colors block truncate"
-                      >
-                        {article.title}
-                      </Link>
-                    </li>
-                  ))}
+                  {previewArticles.length === 0 ? (
+                    <li className="text-sm text-gray-400">No data yet.</li>
+                  ) : (
+                    previewArticles.map((article) => (
+                      <li key={article.id}>
+                        <Link
+                          href={`/help-center/${category.id}/category/${article.subCategoryId}/${article.id}`}
+                          className="text-gray-500 hover:text-black text-sm transition-colors block truncate"
+                        >
+                          {article.title}
+                        </Link>
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
             ))}
